@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>alex liu dot com</title>
+  <style>
+  * {
+    font-family: "Courier";
+    background: #;
+  }
+  #center {
+    position: absolute; 
+    left: 0; 
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    width: 800px;
+  }
+  a {
+    color: #0060B6;
+    text-decoration: none;
+  }
+
+  a:hover 
+  {
+    color:#00A0C6; 
+    text-decoration:none; 
+    cursor:pointer;  
+  }
+  .ball {
+    position: absolute;
+    border-radius: 100%;
+    opacity: 0.7;
+  }
+  </style>
+</head>
+<body>
+  <div class="animation-wrapper">
+    <div class="particle particle-1"></div>
+    <div class="particle particle-2"></div>
+    <div class="particle particle-3"></div>
+    <div class="particle particle-4"></div>
+  </div>
+  <div id="center">
+    <div class="navigation">
+      <a href="index.html">home</a>
+      <a href="about.html">about</a>
+      <a href="portfolio.html">portfolio</a>
+    </div>
+    <h1>portfolio</h1>
+    <p>this is my spot on the web.</p>
+    <p>i enjoy learning and building things.</p>
+    <p>feel free to click around or reach out!</p>
+  </div>
+  <script>
+    const colors = ["#3CC157", "#2AA7FF", "#1B1B1B", "#FCBC0F", "#F85F36"];
+
+    const numBalls = 50;
+    const balls = [];
+
+    for (let i = 0; i < numBalls; i++) {
+      let ball = document.createElement("div");
+      ball.classList.add("ball");
+      ball.style.background = colors[Math.floor(Math.random() * colors.length)];
+      ball.style.left = `${Math.floor(Math.random() * 100)}vw`;
+      ball.style.top = `${Math.floor(Math.random() * 100)}vh`;
+      ball.style.transform = `scale(${Math.random()})`;
+      ball.style.width = `${Math.random()}em`;
+      ball.style.height = ball.style.width;
+      
+      balls.push(ball);
+      document.body.append(ball);
+    }
+
+    // Keyframes
+    balls.forEach((el, i, ra) => {
+      let to = {
+        x: Math.random() * (i % 2 === 0 ? -11 : 11),
+        y: Math.random() * 12
+      };
+
+      let anim = el.animate(
+        [
+          { transform: "translate(0, 0)" },
+          { transform: `translate(${to.x}rem, ${to.y}rem)` }
+        ],
+        {
+          duration: (Math.random() + 1) * 2000, // random duration
+          direction: "alternate",
+          fill: "both",
+          iterations: Infinity,
+          easing: "ease-in-out"
+        }
+      );
+    });
+  </script>
+</body>
+</html>
