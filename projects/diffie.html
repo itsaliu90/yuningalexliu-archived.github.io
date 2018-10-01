@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>alex liu dot com</title>
+  <style>
+  * {
+    font-family: "Courier";
+    background: #;
+  }
+  #center {
+    position: absolute; 
+    left: 0; 
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    width: 800px;
+  }
+  a {
+    color: #0060B6;
+    text-decoration: none;
+  }
+
+  a:hover 
+  {
+    color:#00A0C6; 
+    text-decoration:none; 
+    cursor:pointer;  
+  }
+  .ball {
+    position: absolute;
+    border-radius: 100%;
+    opacity: 0.7;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <div id="center">
+      <div class="navigation">
+        <a href="../index.html">home</a>
+        <a href="../projects.html">projects</a>
+        <a href="../about.html">about</a>
+      </div>
+      <h1>diffie-hellman from scratch</h1>
+      <p>diffie-hellman is an amazing algorithm.  it allows two parties to jointly establish a shared secret key in a public channel using some clever math, and effectively started the entire field of public key cryptography.</p>
+      <p>the key trick in diffie-hellman takes advantage of the "Power of a Power Rule of exponentiation", that is:</p>
+      <p><strong>(g^a)^b*mod(p) == g^(ab)*mod(p) == g^(ba)*mod(p) == (g^b)^a*mod(p)</strong></p>
+      <p>i wanted to make sure i understood this algorithm, so i realized that i had to code it from scratch.  and why not?  so i made this little interactive demo in javascript.</p>
+      <p>first, Alice and Bob broadcast a shared public modulus (p) and a shared public base (g):</p>
+      <p>shared public modulus (p)</p>
+      <input v-model="shared_modulus" placeholder="large prime number">
+      <p>shared public base (g)</p>
+      <input v-model="shared_public_base" placeholder="primitive root modulo p">
+      <p>next, both Alice and Bob pick secret integers a and b</p>
+      <p>Alice's secret (a)</p>
+      <input v-model="alice_secret" placeholder="integer">
+      <p>Bob's secret (b)</p>
+      <input v-model="bob_secret" placeholder="integer">
+      <p>they then raise the base g to their respective secret, take the modulus p, and broadcast out their results A and B respectively to the other person (i.e. Alice sends A to Bob in cleartext, and vice versa)</p>
+      <p>A == g^a mod p: {{computed_A}}</p>
+      <p>B == g^b mod p: {{computed_B}}</p>
+      <p>finally, they each then raise the computed values B or A that they have received the other person, raise that to their secret, and take modulus p again:</p>
+      <p>Alice's calculated shared key == B^a mod p: {{shared_secret_Alice}}</p>
+      <p>Bob's calculated shared key == B^a mod p: {{shared_secret_Bob}}</p>
+      <p>WOW! they now have a secret shared key that only they know, while communicating completely in cleartext!</p>
+      <p>feel free to change the numbers above and confirm that it works - and have fun!</p>
+    </div>
+  </div>
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        shared_modulus: '23',
+        shared_public_base: '5',
+        alice_secret: '4',
+        bob_secret: '3',
+      },
+      computed: {
+          // a computed getter
+          computed_A: function () {
+            // `this` points to the vm instance
+            return this.shared_public_base**this.alice_secret%this.shared_modulus
+          },
+          computed_B: function () {
+            // `this` points to the vm instance
+            return this.shared_public_base**this.bob_secret%this.shared_modulus
+          },
+          shared_secret_Alice: function() {
+            return this.computed_B**this.alice_secret%this.shared_modulus
+          },
+          shared_secret_Bob: function() {
+            return this.computed_A**this.bob_secret%this.shared_modulus
+          },
+      },
+    })
+  </script>
+</body>
+</html>
