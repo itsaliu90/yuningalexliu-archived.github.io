@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>alex liu dot com</title>
+  <style>
+  * {
+    font-family: "Courier";
+    background: #;
+  }
+  #center {
+    position: absolute; 
+    left: 0; 
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    width: 800px;
+    word-wrap:break-word;
+  }
+  a {
+    color: #0060B6;
+    text-decoration: none;
+  }
+
+  a:hover 
+  {
+    color:#00A0C6; 
+    text-decoration:none; 
+    cursor:pointer;  
+  }
+  .ball {
+    position: absolute;
+    border-radius: 100%;
+    opacity: 0.7;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <div id="center">
+      <div class="navigation">
+        <a href="../index.html">home</a>
+        <a href="../projects.html">projects</a>
+        <a href="../about.html">about</a>
+      </div>
+      <h1>forward error correction from scratch</h1>
+      <p>when i first encountered the idea of using error correcting codes for transmitting messages into space, i was blown away by the ingenuity.</p>
+      <p>error-correcting codes leverage the idea of <strong>redundancy</strong> to account for the introduction of errors in a sequence of information</p>
+      <p>let's start with a message you want to beam into space:</p>
+      <input v-model="original_message" placeholder="some random message">
+      <p>here's that message converted to binary using the ascii table:</p>
+      <p>{{original_message_ascii_binary}}</p>
+      <p>now we'll apply encoding to triple each bit so that there is some redundancy when we send it off into space:</p>
+      <p>{{encoded_message}}</p>
+      <p>okay, so you shoot this off into space using some radio waves. but wait...what's that?</p>
+      <button v-on:click="mutate">Gamma rays are scrambling the bits!</button>
+      <p>{{mutated_ascii_binary_message}}</p>
+      <p>fortunately, since we have error-correction, if we now apply it to the binary message, we now get:</p>
+      <p>{{decoded_message}}</p>
+      <p>and in plain-text it would look like:</p>
+      <p>{{original_message_with_error_detection}}</p>
+    </div>
+  </div>
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        original_message: 'Hello, moon base. Do you copy?',
+        mutated_ascii_binary_message: ''
+      },
+      methods: {
+          mutate: function (event) {
+            if (event) {
+              this.mutated_ascii_binary_message = this.encoded_message.split('').map(function(v) {
+                if (Math.random() < 0.05) {
+                  if (v) {
+                    return 0
+                  } else {
+                    return 1
+                  }
+                } else {
+                  return v
+                }
+              }).join('')
+            }
+          }
+      },
+      computed: {
+          original_message_with_replacements: function () {
+            return this.original_message.replace(/[\s.,?]/g,'')
+          },
+          original_message_ascii_binary: function () {
+            original_message_ascii_binary = ''
+            for (var i = 0; i < this.original_message_with_replacements.length; i++) {
+              original_message_ascii_binary += this.original_message_with_replacements[i].charCodeAt(0).toString(2)
+            }
+            return original_message_ascii_binary
+          },
+          encoded_message: function () {
+            return this.original_message_ascii_binary.split('').map(function(v) {
+              return v + v + v;
+              }).join('')
+            },
+          decoded_message: function () {
+            split_ary = this.mutated_ascii_binary_message.split('')
+            result_ary = []
+            for (var i = 0; i < split_ary.length; i+=3) {
+              first = split_ary[i]
+              second = split_ary[i+1]
+              third = split_ary[i+2]
+              triplet = [first, second, third]
+              if (JSON.stringify(triplet) == JSON.stringify(["0","0","0"])) {
+                result_ary.push("0")
+              } else if (JSON.stringify(triplet) == JSON.stringify(["1","1","1"])) {
+                result_ary.push("1")
+              } else if ([JSON.stringify(["1","0","0"]),JSON.stringify(["0","1","0"]),JSON.stringify(["0","0","1"])].includes(JSON.stringify(triplet))) {
+                result_ary.push("0")
+              } else if ([JSON.stringify(["1","1","0"]),JSON.stringify(["1","0","1"]),JSON.stringify(["0","1","1"])].includes(JSON.stringify(triplet))) {
+                result_ary.push("1")
+              }
+            }
+            return result_ary.join('')
+          },
+          original_message_with_error_detection: function () {
+            return this.decoded_message.replace(/[01]{7}/g, function(bin) {
+              return String.fromCharCode(parseInt(bin, 2))
+            })
+          }
+      }
+    })
+  </script>
+</body>
+</html>

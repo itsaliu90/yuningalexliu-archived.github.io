@@ -47,11 +47,11 @@
       <p>diffie-hellman is an amazing algorithm.  it allows two parties to jointly establish a shared secret key in a public channel using some clever math, and effectively started the entire field of public key cryptography.</p>
       <p>the key trick in diffie-hellman takes advantage of the "Power of a Power Rule of exponentiation", that is:</p>
       <p><strong>(g^a)^b*mod(p) == g^(ab)*mod(p) == g^(ba)*mod(p) == (g^b)^a*mod(p)</strong></p>
-      <p>i wanted to make sure i understood this algorithm, so i realized that i had to code it from scratch.  and why not?  so i made this little interactive demo in javascript.</p>
+      <p>i wanted to make sure i understood this algorithm, so i realized that i had to code it from scratch.  and why not?  so i made this little interactive demo in javascript with vue.js to help manage data binding.</p>
       <p>first, Alice and Bob broadcast a shared public modulus (p) and a shared public base (g):</p>
-      <p>shared public modulus (p)</p>
+      <p>shared public modulus (p) - a prime number (preferably large)</p>
       <input v-model="shared_modulus" placeholder="large prime number">
-      <p>shared public base (g)</p>
+      <p>shared public base (g) - a <a href="https://en.wikipedia.org/wiki/Primitive_root_modulo_n">primitive root modulo p</a></p>
       <input v-model="shared_public_base" placeholder="primitive root modulo p">
       <p>next, both Alice and Bob pick secret integers a and b</p>
       <p>Alice's secret (a)</p>
@@ -72,19 +72,16 @@
     var app = new Vue({
       el: '#app',
       data: {
-        shared_modulus: '23',
-        shared_public_base: '5',
-        alice_secret: '4',
-        bob_secret: '3',
+        shared_modulus: 23,
+        shared_public_base: 5,
+        alice_secret: 4,
+        bob_secret: 3,
       },
       computed: {
-          // a computed getter
           computed_A: function () {
-            // `this` points to the vm instance
             return this.shared_public_base**this.alice_secret%this.shared_modulus
           },
           computed_B: function () {
-            // `this` points to the vm instance
             return this.shared_public_base**this.bob_secret%this.shared_modulus
           },
           shared_secret_Alice: function() {
