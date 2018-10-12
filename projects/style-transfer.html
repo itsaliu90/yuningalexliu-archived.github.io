@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>alex liu dot com</title>
+  <style>
+  * {
+    font-family: "Courier";
+    background: #;
+  }
+  #center {
+    position: absolute; 
+    left: 0; 
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    width: 800px;
+  }
+  a {
+    color: #0060B6;
+    text-decoration: none;
+  }
+
+  a:hover 
+  {
+    color:#00A0C6; 
+    text-decoration:none; 
+    cursor:pointer;  
+  }
+  .ball {
+    position: absolute;
+    border-radius: 100%;
+    opacity: 0.7;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <div id="center">
+      <div class="navigation">
+        <a href="../index.html">home</a>
+        <a href="../projects.html">projects</a>
+        <a href="../about.html">about</a>
+      </div>
+      <h1>deep learning style transfer</h1>
+      <p>i used code from this library and ran this on AWS overnight. didn't transfer the mouth the best, but i am pleased with the result.  in the future, would be nice to be able to automatically generate the masks.</p>
+      <img id="bottom-image" src="../images/style-transfer.png" alt="style transfer" style="width:800px;height:533px;">
+</body>
+</html>
